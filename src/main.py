@@ -132,23 +132,27 @@ def draw_hexagon_from_corners(corn):
 
 def render_map(m):
     for h in m:
-        corners = polygon_corners(Layout(layout_flat, Point(42, 42), Point(0, 0)), h)
+        corners = polygon_corners(Layout(layout_flat, Point(42, 42), Point(400, 400)), h)
         (text_pos_x, text_pos_y) = draw_hexagon_from_corners(corners)
         Draw.text((text_pos_y[0], text_pos_x[1] - 5),"(" + str(h['q'])+',' + str(h['r']) + ',' + str(h['r']) + ")",(0,0,0))
 
-
-def main():
+def populate_hexagonal_map(map_size):
     hex_map = []
-    map_size = 8
-
-    q = 0
+    q = -map_size
     while q <= map_size:
-        r = map_size - q
-        while r <= map_size:
-            H = Hex(q, r, -q-r)
-            hex_map.append(H)
+        r1 = max(-map_size, -q - map_size)
+        r2 = min(map_size, -q + map_size)
+        r = r1 
+        while r <= r2:
+            hex_map.append(Hex(q, r, -q-r))
             r += 1
         q += 1
+    return hex_map
+
+def main():
+    map_size = 3
+
+    hex_map = populate_hexagonal_map(map_size)
 
     render_map(hex_map)
     Img.show()
